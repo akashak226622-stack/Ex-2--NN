@@ -1,8 +1,10 @@
-<H3>Name</H3>
-<H3>Register no.</H3>
-<H3>Date</H3>
+<H3>NAME: AKASH A </H3>
+<H3>REG.NO.: 212225240006 </H3>
+
 <H3>Experiment No. 2 </H3>
+
 ## Implementation of Perceptron for Binary Classification
+
 # AIM:
 To implement a perceptron for classification using Python<BR>
 
@@ -49,11 +51,76 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
 # PROGRAM:
-    ''' Insert your code here '''
+ ~~~
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+df = pd.read_csv("student_pass.csv")
+print(df.head())
+
+# extract the label column
+y = df.iloc[:,2].values
+
+# extract features
+x = df.iloc[:,0:2].values
+
+plt.scatter(x[y==0,0], x[y==0,1], color='red', marker='o', label='Fail')
+plt.scatter(x[y==1,0], x[y==1,1], color='green', marker='x', label='Pass')
+
+plt.xlabel("Hours Studied")
+plt.ylabel("Attendance")
+plt.legend(loc='upper left')
+plt.show()
+
+y = np.where(y == 'Iris-Setosa',1,-1)
+y = np.where(y == 1,1,-1)
+
+# Convert labels
+y = np.where(y == 1, 1, -1)
+
+# Standardize features
+x[:,0] = (x[:,0] - x[:,0].mean()) / x[:,0].std()
+x[:,1] = (x[:,1] - x[:,1].mean()) / x[:,1].std()
+
+# Split the data
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.25, random_state=0
+)
+
+# Train the model
+classifier = Perceptron(learning_rate=0.01)
+classifier.fit(x_train, y_train)
+
+# Accuracy
+print("Accuracy:", accuracy_score(y_test, classifier.predict(x_test)) * 100)
+
+# Plot the number of errors during each iteration
+plt.plot(
+    range(1, len(classifier.misclassified_samples) + 1),
+    classifier.misclassified_samples,
+    marker='o'
+)
+plt.xlabel("Epoch")
+plt.ylabel("Errors")
+plt.show()
+
+~~~
+
 
 # OUTPUT:
 
-    ''' Show your result '''
+<img width="557" height="111" alt="image" src="https://github.com/user-attachments/assets/88438472-c8b4-4efe-8e16-3fbf02ee37da" />
+
+<img width="550" height="418" alt="image" src="https://github.com/user-attachments/assets/4e28e06a-04ca-4644-be6a-e7a02fd397d4" />
+
+<img width="551" height="430" alt="image" src="https://github.com/user-attachments/assets/a1cdca9c-cc5f-4bd6-9580-b16557e0e00d" />
+
+
 
 # RESULT:
  Thus, a single layer perceptron model is implemented using python to classify Iris data set.
