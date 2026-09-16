@@ -1,8 +1,6 @@
 <H3>NAME: AKASH A </H3>
 <H3>REG.NO.: 212225240006 </H3>
 
-<H3>Experiment No. 2 </H3>
-
 ## Implementation of Perceptron for Binary Classification
 
 # AIM:
