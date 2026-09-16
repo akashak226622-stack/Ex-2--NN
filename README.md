@@ -1,9 +1,9 @@
-<H3>NAME: AKASH A </H3>
-<H3>REG.NO.: 212225240006 </H3>
-
+<H3>Name:AKASH A </H3>
+<H3>Register no.: 212225240006</H3>
+<H3>Experiment No. 2 </H3>
 ## Implementation of Perceptron for Binary Classification
 
-# AIM:
+**AIM:
 To implement a perceptron for classification using Python<BR>
 
 # EQUIPMENTS REQUIRED:
@@ -49,75 +49,80 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
 # PROGRAM:
- ~~~
+```
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
-
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+class Perceptron:
+    def __init__(self, learning_rate = 0.1):
+        self.learning_rate = learning_rate
+        self.b = 0.0
+        self.w = None
+        self.misclassified_samples = []
 
-df = pd.read_csv("student_pass.csv")
+    def fit(self, x: np.array, y: np.array, n_iter = 10):
+        self._b = 0.0
+        self._w = np.zeros(x.shape[1])
+        self.misclassified_samples = []
+        for _ in range(n_iter):
+            errors = 0
+            for xi, yi in zip(x, y):
+                update = self.learning_rate * (yi - self.predict(xi))
+                self._b += update
+                self._w += update * xi
+                errors += int(update != 0.0)
+            self.misclassified_samples.append(errors)
+
+    def f(self, x: np.array) -> float:
+        return np.dot(x, self._w) + self._b
+
+    def predict(self, x: np.array) -> int:
+        return np.where(self.f(x) >= 0, 1, -1)
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+df = pd.read_csv(url, header=None)
 print(df.head())
-
-# extract the label column
-y = df.iloc[:,2].values
-
-# extract features
-x = df.iloc[:,0:2].values
-
-plt.scatter(x[y==0,0], x[y==0,1], color='red', marker='o', label='Fail')
-plt.scatter(x[y==1,0], x[y==1,1], color='green', marker='x', label='Pass')
-
-plt.xlabel("Hours Studied")
-plt.ylabel("Attendance")
+y = df.iloc[:, 4].values
+x = df.iloc[:, 0:3].values
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.set_title('Iris data set')
+ax.set_xlabel("Sepal length in width (cm)")
+ax.set_ylabel("Sepal width in width (cm)")
+ax.set_zlabel("Petal length in width (cm)")
+ax.scatter(x[:50,0], x[:50,1], x[:50,2], color='red',marker='o', s=4, label="Iris Setosa")
+ax.scatter(x[50:100,0], x[50:100,1], x[50:100,2], color='blue',marker='^', s=4, label="Iris Versicolour")
+ax.scatter(x[100:150,0], x[100:150,1], x[100:150,2], color='green',marker='x', s=4, label="Iris Virginica")
 plt.legend(loc='upper left')
 plt.show()
-
-y = np.where(y == 'Iris-Setosa',1,-1)
-y = np.where(y == 1,1,-1)
-
-# Convert labels
-y = np.where(y == 1, 1, -1)
-
-# Standardize features
-x[:,0] = (x[:,0] - x[:,0].mean()) / x[:,0].std()
-x[:,1] = (x[:,1] - x[:,1].mean()) / x[:,1].std()
-
-# Split the data
-x_train, x_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.25, random_state=0
-)
-
-# Train the model
+x = x[0:100, 0:2]
+y = y[0:100]
+plt.figure(figsize=(4,4))
+plt.scatter(x[:50, 0], x[:50, 1], color='red', marker='o', label='Setosa')
+plt.scatter(x[50:100, 0], x[50:100, 1], color='blue', marker='x',label='Versicolour')
+plt.xlabel("Sepal length")
+plt.ylabel("Petal length")
+plt.legend(loc='upper left')
+plt.show()
+y = np.where(y == 'Iris-setosa', 1, -1)
+x[:, 0] = (x[:, 0] - x[:, 0].mean()) / x[:, 0].std()
+x[:, 1] = (x[:, 1] - x[:, 1].mean()) / x[:, 1].std()
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25,random_state=0)
 classifier = Perceptron(learning_rate=0.01)
 classifier.fit(x_train, y_train)
-
-# Accuracy
-print("Accuracy:", accuracy_score(y_test, classifier.predict(x_test)) * 100)
-
-# Plot the number of errors during each iteration
-plt.plot(
-    range(1, len(classifier.misclassified_samples) + 1),
-    classifier.misclassified_samples,
-    marker='o'
-)
-plt.xlabel("Epoch")
-plt.ylabel("Errors")
+print("accuracy", accuracy_score(classifier.predict(x_test), y_test)*100)
+plt.figure(figsize=(4,4))
+plt.plot(range(1, len(classifier.misclassified_samples) + 1),classifier.misclassified_samples, marker='o')
+plt.xlabel('Epoch')
+plt.ylabel('Errors')
 plt.show()
-
-~~~
-
-
+```
 # OUTPUT:
-
-<img width="557" height="111" alt="image" src="https://github.com/user-attachments/assets/88438472-c8b4-4efe-8e16-3fbf02ee37da" />
-
-<img width="550" height="418" alt="image" src="https://github.com/user-attachments/assets/4e28e06a-04ca-4644-be6a-e7a02fd397d4" />
-
-<img width="551" height="430" alt="image" src="https://github.com/user-attachments/assets/a1cdca9c-cc5f-4bd6-9580-b16557e0e00d" />
-
+<img width="1605" height="616" alt="image" src="https://github.com/user-attachments/assets/ca6f5c77-2773-49d7-9255-10f4c3ac039e" />
+<img width="1675" height="844" alt="image" src="https://github.com/user-attachments/assets/ea2e707c-7b6f-4683-bf4f-ba54e8b3abb5" />
 
 
 # RESULT:
